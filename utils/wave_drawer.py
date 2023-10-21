@@ -28,11 +28,13 @@ def draw_wave(wave):
   analog_freq = wave.analogFreq
   amplitude = wave.amplitude
   phase_shift = wave.phaseShift
-  # Calculate the time values
-  t = np.arange(0, 1, 1/sampling_freq)
-  # Calculate the angular frequency
-  omega = 2 * np.pi * analog_freq
   waveArr = None
+  omega = 2 * np.pi * analog_freq
+  if sampling_freq == 0 :
+    t = np.linspace(0, 1, 100)
+  else:
+    # Calculate the time values
+    t = np.arange(0, 1, 1/sampling_freq)
 
   if wave.isSine :
     sin_wave = amplitude * np.sin((omega * t ) + phase_shift)
