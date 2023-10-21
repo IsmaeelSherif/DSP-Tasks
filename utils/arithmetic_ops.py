@@ -34,8 +34,8 @@ def squarWave(inputWave):
 
 def shiftWave(inputWave, value):
     arr = np.array(inputWave)
-    result = [element +value for element in arr]
-    return result
+    shifted = arr - value
+    return shifted
 
 def normalizeWave(inputWave, choice):
     arr = np.array(inputWave)
