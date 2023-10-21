@@ -4,36 +4,32 @@ from utils.signal_reader import readInputFromFile
 from utils import arithmetic_ops
 from testwave.comparesignals import compareSignalToFile
 
-def openMultiplyDialog(root):
+def openAccumDialog(root):
 
-    inputSignal = None
-
+    accumSignal = None
 
 
 
     def change_label_text(label):
-        nonlocal inputSignal
         inputSignal = readInputFromFile()
         if(inputSignal):
             label.config(text=inputSignal.fileName)
+            nonlocal accumSignal
+            accumSignal = arithmetic_ops.accumulateWave(inputSignal)
 
 
     def show():
-        if(inputSignal):
-            result = calculateResult()
-            if(result):
-                x = range(0, len(result))
-                wave_drawer.draw(x, result)
+        if(accumSignal != None):
+            x = range(0, len(accumSignal))
+            wave_drawer.draw(x, accumSignal)
 
     def compare():
-        if(inputSignal):
-            result = calculateResult()
-            if(result):
-                compareSignalToFile(result)
+        if(accumSignal != None):
+            compareSignalToFile(accumSignal)
 
     dialog = tk.Toplevel(root)
     dialog.grab_set()
-    dialog.title("Signal Multiplication")
+    dialog.title("Signal Accumulation")
     dialog.geometry("360x300")
 
     # Create a frame for the buttons and labels
@@ -47,26 +43,9 @@ def openMultiplyDialog(root):
     label1.grid(row=0, column=1)
 
 
-
-    factor_label = tk.Label(dialog, text="Factor")
-    factor_label.pack()
-
-    factor_textbox = tk.Entry(dialog)
-    factor_textbox.pack()
-
     button_frame2 = tk.Frame(dialog, padx=10, pady=10)
     button_frame2.pack()
 
-    def calculateResult():
-        factor = 0
-        try:
-            factor = float(factor_textbox.get())
-        except:
-            print('Put a correct Factor')
-            return
-        nonlocal inputSignal
-        multiplyRes = arithmetic_ops.multiplyWave(inputSignal, factor)
-        return multiplyRes
 
     show_button = tk.Button(button_frame2, text="Show", command=show)
     show_button.grid(row=0, column=0, padx=5)

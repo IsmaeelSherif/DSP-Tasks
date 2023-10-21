@@ -23,16 +23,20 @@ def showArithOpsDialog(root):
         openMultiplyDialog(dialog)
 
     def squaring_click():
-        pass
+        from dialogs.ArithDialogs.squaring import openSquaringDialog
+        openSquaringDialog(dialog)
 
     def shifting_click():
-        pass
+        from dialogs.ArithDialogs.shifting import openShiftDialog
+        openShiftDialog(dialog)
 
     def normalization_click():
-        pass
+        from dialogs.ArithDialogs.normalization import openNormalizeDialog
+        openNormalizeDialog(dialog)
 
     def accumulation_click():
-        pass
+        from dialogs.ArithDialogs.accum import openAccumDialog
+        openAccumDialog(dialog)
 
     # Create and configure a frame with padding
     frame = tk.Frame(dialog, padx=20, pady=10)

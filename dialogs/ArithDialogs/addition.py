@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from utils import wave_drawer
-from utils.example_reader import readInputFromFile
+from utils.signal_reader import readInputFromFile
 from utils import arithmetic_ops
 from testwave.comparesignals import compareSignalToFile
 
@@ -10,15 +10,15 @@ def openAddDialog(root):
     augmentedWaves = []
 
     def open_file_picker():
-        inputWave, displayName = readInputFromFile()
+        inputWave = readInputFromFile()
         if inputWave:
             nonlocal augmentedWaves
             if len(augmentedWaves) > 0:
-                listbox.insert(tk.END, "\n" + displayName)
+                listbox.insert(tk.END, "\n" + inputWave.fileName)
             else:
-                listbox.insert(tk.END, displayName)
+                listbox.insert(tk.END, inputWave.fileName)
             
-            augmentedWaves = arithmetic_ops.addWave(inputWave, augmentedWaves)
+            augmentedWaves = arithmetic_ops.addWave(inputWave.magnitudes, augmentedWaves)
             print('add result', augmentedWaves)
             
 
@@ -28,7 +28,8 @@ def openAddDialog(root):
         augmentedWaves = []
 
     def show():
-        wave_drawer.draw(augmentedWaves)
+        x = range(0, len(augmentedWaves))
+        wave_drawer.draw(x, augmentedWaves)
 
     def compare():
         compareSignalToFile(augmentedWaves)

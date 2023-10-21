@@ -2,7 +2,7 @@
 import tkinter as tk
 from utils.new_wave_dialog import newWaveDialog
 from utils import wave_drawer
-from utils.example_reader import readInputFromFile
+from utils.signal_reader import readInputFromFile
 from dialogs.arith_ops_dialog import showArithOpsDialog
 
 window = tk.Tk() 
@@ -10,7 +10,7 @@ window.title('DSP')
 window.geometry("960x540")
 
 def showWave():
-    example = readInputFromFile()[0]
+    example = readInputFromFile()[1]
     wave_drawer.draw(example)
 
 def newWave():
@@ -19,6 +19,8 @@ def newWave():
 
 def arithmetic():
     showArithOpsDialog(window)
+
+tk.Label(window, text="").pack()
 
 openFileBtn = tk.Button(window, pady=4, text='Open File', width=25, command=showWave) 
 openFileBtn.pack() 

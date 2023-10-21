@@ -4,7 +4,7 @@ from utils.signal_reader import readInputFromFile
 from utils import arithmetic_ops
 from testwave.comparesignals import compareSignalToFile
 
-def openMultiplyDialog(root):
+def openShiftDialog(root):
 
     inputSignal = None
 
@@ -22,18 +22,17 @@ def openMultiplyDialog(root):
         if(inputSignal):
             result = calculateResult()
             if(result):
-                x = range(0, len(result))
-                wave_drawer.draw(x, result)
+                wave_drawer.draw(result.x, result.magnitudes)
 
     def compare():
         if(inputSignal):
             result = calculateResult()
             if(result):
-                compareSignalToFile(result)
+                compareSignalToFile(result.magnitudes)
 
     dialog = tk.Toplevel(root)
     dialog.grab_set()
-    dialog.title("Signal Multiplication")
+    dialog.title("Signal Shifting")
     dialog.geometry("360x300")
 
     # Create a frame for the buttons and labels
@@ -48,7 +47,7 @@ def openMultiplyDialog(root):
 
 
 
-    factor_label = tk.Label(dialog, text="Factor")
+    factor_label = tk.Label(dialog, text="Shift Amount")
     factor_label.pack()
 
     factor_textbox = tk.Entry(dialog)
@@ -62,11 +61,11 @@ def openMultiplyDialog(root):
         try:
             factor = float(factor_textbox.get())
         except:
-            print('Put a correct Factor')
+            print('Put a correct shift factor')
             return
         nonlocal inputSignal
-        multiplyRes = arithmetic_ops.multiplyWave(inputSignal, factor)
-        return multiplyRes
+        shiftRef = arithmetic_ops.shiftWave(inputSignal, factor)
+        return shiftRef
 
     show_button = tk.Button(button_frame2, text="Show", command=show)
     show_button.grid(row=0, column=0, padx=5)

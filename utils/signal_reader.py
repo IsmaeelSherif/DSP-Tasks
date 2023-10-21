@@ -1,5 +1,6 @@
 
 from tkinter.filedialog import askopenfilename
+from models.signal import Signal
 import os
 
 
@@ -13,7 +14,7 @@ def readInputFromFile():
      file_name = os.path.basename(file_path)
      displayFileName = os.path.join(last_subfolder, file_name)
   else:
-     return None, None
+     return None
   
   with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -29,9 +30,10 @@ def readInputFromFile():
     for i in range(0, numberOfSamples):
       parts = lines[i + 3].split()  # Split the line into parts using whitespace as the delimiter
 
-      x[i] = float(parts[0])
+      x[i] = int(parts[0])
       y[i] = float(parts[1])
 
-    return y, displayFileName
+    signal = Signal(x, y, displayFileName)
+    return signal
 
     

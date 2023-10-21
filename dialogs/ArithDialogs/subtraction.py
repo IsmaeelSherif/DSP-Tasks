@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from utils import wave_drawer
-from utils.example_reader import readInputFromFile
+from utils.signal_reader import readInputFromFile
 from utils import arithmetic_ops
 from testwave.comparesignals import compareSignalToFile
 
@@ -11,7 +11,7 @@ def openSubDialog(root):
     signal2 = None
 
     def change_label_text(signalNum, label):
-        inputSignal, displayName = readInputFromFile()
+        inputSignal = readInputFromFile()
         if(inputSignal):
             if(signalNum == 1):
                 nonlocal signal1
@@ -19,13 +19,14 @@ def openSubDialog(root):
             else:
                 nonlocal signal2
                 signal2 = inputSignal
-            label.config(text=displayName)
+            label.config(text=inputSignal.fileName)
 
 
     def show():
         result = arithmetic_ops.subWave(signal1, signal2)
         print('Sub result', result)
-        wave_drawer.draw(result)
+        x = range(0, len(result))
+        wave_drawer.draw(x, result)
 
     def compare():
         result = arithmetic_ops.subWave(signal1, signal2)
