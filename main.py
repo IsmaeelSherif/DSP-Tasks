@@ -4,6 +4,7 @@ from utils.new_wave_dialog import newWaveDialog
 from utils import wave_drawer
 from utils.signal_reader import readInputFromFile
 from dialogs.arith_ops_dialog import showArithOpsDialog
+from dialogs.quantization_dialog import openQuantizaDialog
 
 window = tk.Tk() 
 window.title('DSP')
@@ -20,6 +21,9 @@ def newWave():
 def arithmetic():
     showArithOpsDialog(window)
 
+def quantize():
+    openQuantizaDialog(window)
+
 tk.Label(window, text="").pack()
 
 openFileBtn = tk.Button(window, pady=4, text='Open File', width=25, command=showWave) 
@@ -30,5 +34,8 @@ newBtn.pack()
 
 arithBtn = tk.Button(window, pady=4, text='Arithmetic Ops', width=25, command=arithmetic) 
 arithBtn.pack()
+
+quantizeBtn = tk.Button(window, pady=4, text='Quantize Signal', width=25, command=quantize) 
+quantizeBtn.pack()
 
 window.mainloop() 
