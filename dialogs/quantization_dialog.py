@@ -3,6 +3,23 @@ from utils import wave_drawer
 from utils.signal_reader import readInputFromFile
 from testwave.Task3.Test1.QuanTest1 import QuantizationTest1
 from testwave.Task3.Test2.QuanTest2 import QuantizationTest2
+import numpy as np
+import math as mt
+
+def show_output(arr1,arr2,arr3,arr4):
+    i=0
+    for i in range(len(arr1)) :
+        print(arr1[i],arr2[i],arr3[i],arr4[i])
+
+def show_output2(arr1,arr2):
+    i=0
+    for i in range(len(arr1)) :
+        print(arr1[i],arr2[i])
+
+def convert_to_binary(number, num_bits):
+    binary = bin(number)[2:]  # Convert number to binary string
+    binary = binary.zfill(num_bits)  # Pad the binary string with
+    return binary
 
 def openQuantizaDialog(root):
 
@@ -17,9 +34,8 @@ def openQuantizaDialog(root):
         if(inputSignal):
             label.config(text=inputSignal.fileName)
 
-
     def calculateQuantizedSignal():
-        # selected_type can be either = 'levels' or = 'bits'
+        # selected_type can be either 'levels' or 'bits'
         magnitudes = inputSignal.magnitudes
         noOfBitsOrLevels = 0
         try:
@@ -27,15 +43,81 @@ def openQuantizaDialog(root):
         except:
             print('Put a correct integer value')
             return
-        
 
-        if(selected_type.get() == 'levels'):
-            # return intervalIndices, encodedValues, quantizedValues, error
-            pass
+        if selected_type.get() == 'levels':
+            number_of_levels = noOfBitsOrLevels
+            number_of_bits = int(mt.log2(noOfBitsOrLevels))
+            arr = np.array(magnitudes)
+            maximum = max(arr)
+            minimum = min(arr)
+            delta = (maximum - minimum) / number_of_levels
+            ranges = np.arange(start=minimum, stop=maximum, step=delta)
+            ranges = [round(element , 2) for element in ranges]
+            quantized = []
+            midpoints = []
+            x = round(minimum,2)
+            while x < maximum:
+                midpoint = (x+(x + delta))/2
+                midpoint = round(midpoint, 3)
+                midpoints.append(midpoint)
+                print("midpoint for : ",x,"and ",x+delta,"is : ",midpoint)
+                x = round( x + delta , 2)
 
-        else: #bits
-            # return encodedValues, quantizedValues
-            pass
+            distances = []
+            error = []
+            which_interval = []
+            which_interval_encoded = []
+
+
+            for i in range(len(arr)):
+                item = arr[i]
+                distances = [element - item  for element in midpoints]
+                min_dis = min(distances, key=abs)
+                error.append(round(min_dis, 3))
+                level = distances.index(min_dis)+1
+                quantized.append( midpoints[level-1])
+                which_interval.append(level)
+                which_interval_encoded.append(convert_to_binary(level-1 , number_of_bits))
+            print(len(which_interval) , len(which_interval_encoded) , len(quantized) , len(error))
+            show_output(which_interval , which_interval_encoded , quantized ,error)
+            return which_interval,which_interval_encoded,quantized,error
+
+        else:  # bits
+            number_of_levels = mt.pow(2 , noOfBitsOrLevels)
+            number_of_bits = noOfBitsOrLevels
+            arr = np.array(magnitudes)
+            maximum = max(arr)
+            minimum = min(arr)
+            delta = (maximum - minimum) / number_of_levels
+            ranges = np.arange(start=minimum, stop=maximum, step=delta)
+            ranges = [round(element, 2) for element in ranges]
+            quantized = []
+            midpoints = []
+            x = round(minimum, 2)
+            while x < maximum:
+                midpoint = (x + (x + delta)) / 2
+                midpoint = round(midpoint, 3)
+                midpoints.append(midpoint)
+                print("midpoint for : ", x, "and ", x + delta, "is : ", midpoint)
+                x = round(x + delta, 2)
+
+            distances = []
+            error = []
+            which_interval = []
+            which_interval_encoded = []
+
+            for i in range(len(arr)):
+                item = arr[i]
+                distances = [element - item for element in midpoints]
+                min_dis = min(distances, key=abs)
+                error.append(round(min_dis, 3))
+                level = distances.index(min_dis) + 1
+                quantized.append(midpoints[level - 1])
+                which_interval.append(level)
+                which_interval_encoded.append(convert_to_binary(level - 1, number_of_bits))
+            show_output2(which_interval_encoded, quantized)
+
+            return which_interval_encoded, quantized
 
 
     def testResult(result):
