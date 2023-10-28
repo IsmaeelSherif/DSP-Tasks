@@ -11,8 +11,8 @@ window.title('DSP')
 window.geometry("960x540")
 
 def showWave():
-    example = readInputFromFile()[1]
-    wave_drawer.draw(example)
+    example = readInputFromFile()
+    wave_drawer.draw(example.x, example.magnitudes)
 
 def newWave():
     wave = newWaveDialog(window)

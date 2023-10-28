@@ -1,6 +1,8 @@
 import tkinter as tk
 from utils import wave_drawer
 from utils.signal_reader import readInputFromFile
+from testwave.Task3.Test1.QuanTest1 import QuantizationTest1
+from testwave.Task3.Test2.QuanTest2 import QuantizationTest2
 
 def openQuantizaDialog(root):
 
@@ -16,7 +18,7 @@ def openQuantizaDialog(root):
             label.config(text=inputSignal.fileName)
 
 
-    def calculateQuantizedMagnitudes():
+    def calculateQuantizedSignal():
         # selected_type can be either = 'levels' or = 'bits'
         magnitudes = inputSignal.magnitudes
         noOfBitsOrLevels = 0
@@ -26,12 +28,33 @@ def openQuantizaDialog(root):
             print('Put a correct integer value')
             return
         
-        
+
+        if(selected_type.get() == 'levels'):
+            # return intervalIndices, encodedValues, quantizedValues, error
+            pass
+
+        else: #bits
+            # return encodedValues, quantizedValues
+            pass
+
+
+    def testResult(result):
+        import os
+        import sys
+
+        rootPath = os.path.dirname(sys.argv[0])
+        if('1' in inputSignal.fileName):
+            filename = rootPath + '/testwave/Task3/Test1/Quan1_input.txt'
+            QuantizationTest1(filename, result[0], result[1])
+        elif('2' in inputSignal.fileName):
+            filename = rootPath + '/testwave/Task3/Test2/Quan2_input.txt'
+            QuantizationTest2(filename, result[0], result[1], result[2], result[3])
 
     def show():
         if(inputSignal):
-            result = calculateQuantizedMagnitudes()
+            result = calculateQuantizedSignal()
             if(result):
+                testResult(result)
                 wave_drawer.draw(inputSignal.x, result)
 
     
