@@ -6,6 +6,15 @@ from testwave.Task3.Test2.QuanTest2 import QuantizationTest2
 import numpy as np
 import math as mt
 
+def show_output(arr1,arr2,arr3,arr4):
+    i=0
+    for i in range(len(arr1)) :
+        print(arr1[i],arr2[i],arr3[i],arr4[i])
+
+def show_output2(arr1,arr2):
+    i=0
+    for i in range(len(arr1)) :
+        print(arr1[i],arr2[i])
 
 def convert_to_binary(number, num_bits):
     binary = bin(number)[2:]  # Convert number to binary string
@@ -54,7 +63,7 @@ def openQuantizaDialog(root):
             
             for i in range(0, len(ranges) - 1):
                 midpoint = (ranges[i+1] + ranges[i]) / 2
-                midpoints.append(midpoint)
+                midpoints.append(round(midpoint,3))
 
             error = []
             which_interval = []
@@ -72,10 +81,11 @@ def openQuantizaDialog(root):
                         break
                 level = levelIndex + 1
 
-                error.append( midpoints[levelIndex] - item )
+                error.append( round((midpoints[levelIndex] - item),3) )
                 quantized.append( midpoints[levelIndex])
                 which_interval.append(level)
                 which_interval_encoded.append(convert_to_binary(levelIndex , number_of_bits))
+            show_output(which_interval,which_interval_encoded,quantized,error)
             return which_interval,which_interval_encoded,quantized,error
 
         else:  # bits
@@ -98,7 +108,7 @@ def openQuantizaDialog(root):
             
             for i in range(0, len(ranges) - 1):
                 midpoint = (ranges[i+1] + ranges[i]) / 2
-                midpoints.append(midpoint)
+                midpoints.append(round(midpoint,3))
 
             error = []
             which_interval_encoded = []
@@ -115,11 +125,11 @@ def openQuantizaDialog(root):
                         break
                 level = levelIndex + 1
 
-                error.append(item - midpoints[levelIndex])
+                error.append(round((item - midpoints[levelIndex]),3))
                 quantized.append( midpoints[levelIndex])
                 which_interval_encoded.append(convert_to_binary(levelIndex , number_of_bits))
 
-
+            show_output2(which_interval_encoded,quantized)
             return which_interval_encoded, quantized
 
 
@@ -142,7 +152,7 @@ def openQuantizaDialog(root):
             if(result):
                 testResult(result)
                 quantizedIndex = 1 if selected_type.get() == 'bits' else 2
-                wave_drawer.draw(inputSignal.x, result[quantizedIndex])
+                wave_drawer.draw_generalized(inputSignal.x, result[quantizedIndex] , "Amplitudes" , "Quantized")
 
     
     dialog = tk.Toplevel(root)
