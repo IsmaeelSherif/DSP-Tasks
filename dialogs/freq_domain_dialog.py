@@ -1,7 +1,7 @@
 import tkinter as tk
 from utils.signal_reader import readInputFromFile
 from utils.signal_exporter import exportSignalToFile
-from utils.dft_idft import applyDFT
+from utils.dft_idft import applyDFT, applyIDFT
 from testwave.Task4.signalcompare import SignalComapreAmplitude, SignalComaprePhaseShift
 from dialogs.edit_signal import openEditDialog
 
@@ -36,12 +36,18 @@ def openFreqDomainDialog(root):
             print('newPhases', new_phases)
             
 
-    def test():
+    def testDFT():
         if(inputSignal):
             amplitudes, phases = applyDFT(inputSignal.magnitudes)
             actualOutputSignal = readInputFromFile('testwave/Task4')
             print('SignalComapreAmplitude', SignalComapreAmplitude(actualOutputSignal.amplitudes, amplitudes))
             print('SignalComaprePhaseShift', SignalComaprePhaseShift(actualOutputSignal.phaseShifts, phases))
+
+    def testIDFT():
+        if(inputSignal):
+            magnitudes = applyIDFT(inputSignal.amplitudes, inputSignal.phaseShifts)
+            # print('SignalComapreAmplitude', SignalComapreAmplitude(actualOutputSignal.amplitudes, amplitudes))
+            # print('SignalComaprePhaseShift', SignalComaprePhaseShift(actualOutputSignal.phaseShifts, phases))
             
 
     dialog = tk.Toplevel(root)
@@ -70,12 +76,10 @@ def openFreqDomainDialog(root):
     button_frame2 = tk.Frame(dialog, padx=10, pady=10)
     button_frame2.pack()
 
-
-
-    show_button = tk.Button(button_frame2, text="Show", command=calculateResult)
+    show_button = tk.Button(button_frame2, text="test IDFT", command=testIDFT)
     show_button.grid(row=0, column=0, padx=5)
 
-    compare_button = tk.Button(button_frame2, text="test", command=test)
+    compare_button = tk.Button(button_frame2, text="test DFT", command=testDFT)
     compare_button.grid(row=0, column=1, padx=5)
 
     editBtn = tk.Button(dialog, text="edit signal", command=edit)

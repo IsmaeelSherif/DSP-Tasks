@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from wave_drawer import draw_generalized , draw_discrete
+from utils.wave_drawer import draw_generalized , draw_discrete
 
 def export_to_text(array1, array2, file_path):
     if len(array1) == len(array2):
@@ -49,18 +49,38 @@ def applyDFT(magnitudes , sampling_freq):
     draw_discrete(frequncies, phases, "frequncy", "phase")
     return amplitudes, phases
 
-def applyIDFT(magnitudes,phase):
-    N = len(magnitudes)
-    amplitudes = []
-    DFT_form = polar_to_complex(magnitudes,phase)
-    for n in range(N) :
-        value = 0
-        for K in range(N):
-            value += DFT_form[K] * (math.cos(2 * math.pi * K * n) +( complex(0 ,(1j * math.sin(2 * math.pi * K * n)))))
-        value /= N
-        amplitudes.append(value)
-    x = np.arange(start=0, stop = N , step = 1 )
-    draw_generalized(x , amplitudes , "n" , "amplitude")
+
+def applyIDFT(amplitudes, phases):
+    N = len(amplitudes)
+
+    for n in range(N):
+
+        magnitude = 0
+
+        for k in range(N):
+
+            xReal = amplitudes[k] * math.cos(phases[k])
+            xImagine = amplitudes[k] * math.sin(phases[k])
+
+            theta = (2 * math.pi * k * n) / N
+            eReal = math.cos(theta)
+            eImagine = math.sin(theta)
+
+            magnitude += eReal * xReal
+            magnitude -= xImagine * eImagine
+
+        magnitude = round(magnitude / N, 2)
+        print('n', n, magnitude)
+
+    # DFT_form = polar_to_complex(magnitudes,phase)
+    # for n in range(N) :
+    #     value = 0
+    #     for K in range(N):
+    #         value += DFT_form[K] * (math.cos(2 * math.pi * K * n) +( complex(0 ,(1j * math.sin(2 * math.pi * K * n)))))
+    #     value /= N
+    #     amplitudes.append(value)
+    # x = np.arange(start=0, stop = N , step = 1 )
+    # draw_generalized(x , amplitudes , "n" , "amplitude")
 
 
 

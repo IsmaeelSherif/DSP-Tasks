@@ -3,7 +3,7 @@ import math
 
 #Use to test the Amplitude of DFT and IDFT
 def SignalComapreAmplitude(SignalInput = [] ,SignalOutput= []):
-    if len(SignalInput) != len(SignalInput):
+    if len(SignalInput) != len(SignalOutput):
         return False
     else:
         for i in range(len(SignalInput)):
