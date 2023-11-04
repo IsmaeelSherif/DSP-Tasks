@@ -22,6 +22,25 @@ def draw(x, amplitudes):
   plt.ylabel('Amplitude')
   plt.show()
 
+def draw_generalized(x, amplitudes , x_name , y_name):
+    if (len(amplitudes) == 0):
+      return
+
+    plt.figure(1)
+    plt.subplot(2, 1, 1)
+    plt.plot(x, amplitudes)
+    plt.title('Continuous Wave')
+    plt.xlabel(x_name)
+    plt.ylabel(y_name)
+
+    plt.figure(2)
+    plt.subplot(2, 1, 1)
+    plt.stem(x, amplitudes, linefmt='b--', markerfmt='bo', basefmt='k-')
+    plt.title('Discrete Wave')
+    plt.xlabel(x_name)
+    plt.ylabel(y_name)
+    plt.show()
+
 
 def draw_wave(wave):
   sampling_freq = wave.Fs
