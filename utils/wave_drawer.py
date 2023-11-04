@@ -91,4 +91,11 @@ def draw_discrete(x, amplitudes , x_name , y_name):
     plt.title('Discrete Wave')
     plt.xlabel(x_name)
     plt.ylabel(y_name)
+    custom_xticks = x
+    custom_xlabels =[]
+    for item in x :
+        custom_xlabels.append(str(item))
+    plt.xticks(custom_xticks,custom_xlabels)
     plt.show()
+
+

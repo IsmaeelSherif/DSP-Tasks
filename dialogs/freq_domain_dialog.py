@@ -18,11 +18,11 @@ def openFreqDomainDialog(root):
 
     def calculateResult():
         samplingFreq = 0
-        # try:
-        #     samplingFreq = float(factor_textbox.get())
-        # except:
-        #     print('Put a correct sampling frequency')
-        #     return
+        try:
+            samplingFreq = float(factor_textbox.get())
+        except:
+            print('Put a correct sampling frequency')
+            return
 
 
     def export():
@@ -30,7 +30,7 @@ def openFreqDomainDialog(root):
 
     def edit():
         if(inputSignal):
-            amplitudes, phases = applyDFT(inputSignal.magnitudes)
+            amplitudes, phases = applyDFT(inputSignal.magnitudes , )
             new_amps, new_phases = openEditDialog(dialog, amplitudes, phases)
             print('newAmps', new_amps)
             print('newPhases', new_phases)
@@ -38,7 +38,7 @@ def openFreqDomainDialog(root):
 
     def testDFT():
         if(inputSignal):
-            amplitudes, phases = applyDFT(inputSignal.magnitudes)
+            amplitudes, phases = applyDFT(inputSignal.magnitudes ,int(factor_textbox.get()) )
             actualOutputSignal = readInputFromFile('testwave/Task4')
             print('SignalComapreAmplitude', SignalComapreAmplitude(actualOutputSignal.amplitudes, amplitudes))
             print('SignalComaprePhaseShift', SignalComaprePhaseShift(actualOutputSignal.phaseShifts, phases))

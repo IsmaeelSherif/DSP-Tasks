@@ -1,6 +1,8 @@
 import math
 import numpy as np
 from utils.wave_drawer import draw_generalized , draw_discrete
+from decimal import Decimal, getcontext
+
 
 def export_to_text(array1, array2, file_path):
     if len(array1) == len(array2):
@@ -34,25 +36,33 @@ def applyDFT(magnitudes , sampling_freq):
         return realComponent, round(imaginaryComponent , 4)
 
 
-    amplitudes = [0] * N
-    phases = [0] * N
+    amplitudes = []
+    phases = []
 
     for i in range(N):
         real, imagine = calculateHarmonic(i)
-        amplitudes[i] = math.sqrt( real ** 2 + imagine ** 2 )
-        phases[i] = math.atan2(imagine, real)
+        amplitudes.append( math.sqrt( real ** 2 + imagine ** 2 ))
+        phases.append( math.atan2(imagine, real))
 
     # to draw
-    fundemental_freq = (2 * math.pi) / (N * (1 / sampling_freq))
-    frequncies = np.arange(start=fundemental_freq, stop=N * fundemental_freq, step=fundemental_freq)
+    fundemental_freq = round( (2 * math.pi) / (N * (1 / sampling_freq)),3)
+    frequncies = np.arange(start = fundemental_freq , stop = round(((N+1) * fundemental_freq),3), step= round(fundemental_freq,3))
+    for item in frequncies:
+        item = round(item,3)
+    #for i in frequncies:
+        #print(i)
+    phases_degree = []
+    for item in phases :
+        value = item * (180 / math.pi)
+        phases_degree.append(value)
     draw_discrete(frequncies, amplitudes, "frequncy", "amplitude")
-    draw_discrete(frequncies, phases, "frequncy", "phase")
+    draw_discrete(frequncies, phases_degree, "frequncy", "phase (degree)")
     return amplitudes, phases
 
 
 def applyIDFT(amplitudes, phases):
     N = len(amplitudes)
-
+    magnitudes = []
     for n in range(N):
 
         magnitude = 0
@@ -70,8 +80,10 @@ def applyIDFT(amplitudes, phases):
             magnitude -= xImagine * eImagine
 
         magnitude = round(magnitude / N, 2)
+        magnitudes.append(magnitude)
         print('n', n, magnitude)
-
+    x_axis = np.arange(start=0, stop=N, step=1)
+    draw_discrete(x_axis, magnitudes , "samples (n)" , "amplitude")
     # DFT_form = polar_to_complex(magnitudes,phase)
     # for n in range(N) :
     #     value = 0
