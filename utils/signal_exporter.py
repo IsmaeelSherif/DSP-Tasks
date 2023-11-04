@@ -1,0 +1,4 @@
+
+
+def exportSignalToFile(relativePath):
+    pass

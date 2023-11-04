@@ -1,11 +1,11 @@
 
 from tkinter.filedialog import askopenfilename
-from models.signal import Signal
+from models.signal import Signal, FDSignal
 import os
 
 
-def readInputFromFile():
-  file_path = askopenfilename()
+def readInputFromFile(defaultPath = ""):
+  file_path = askopenfilename(initialdir=defaultPath)
   displayFileName = ""
 
   if file_path:
@@ -21,7 +21,7 @@ def readInputFromFile():
    # Parse SignalType (0 for Time, 1 for Freq)
   isTimeBased = int(lines[0]) == 0
   #Parse IsPeriodic (0 or 1)
-  is_periodic = bool(lines[1])
+  is_periodic = bool(int(lines[1].strip()) == 1)
   #Parse N1 (Number of samples or frequencies)
   numberOfSamples = int(lines[2])
   if(isTimeBased):
@@ -30,10 +30,16 @@ def readInputFromFile():
     for i in range(0, numberOfSamples):
       parts = lines[i + 3].split()  # Split the line into parts using whitespace as the delimiter
 
-      x[i] = int(parts[0])
-      y[i] = float(parts[1])
+      xAsString = parts[0].replace('f', '')
+      yAsString = parts[1].replace('f', '')
+      
+      x[i] = float(xAsString)
+      y[i] = float(yAsString)
 
-    signal = Signal(x, y, displayFileName)
+    if is_periodic:
+       signal = FDSignal(x, y, displayFileName)
+    else:  
+      signal = Signal(x, y, displayFileName)
     return signal
 
     

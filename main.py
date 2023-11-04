@@ -1,10 +1,11 @@
 
 import tkinter as tk
-from utils.new_wave_dialog import newWaveDialog
 from utils import wave_drawer
 from utils.signal_reader import readInputFromFile
+from dialogs.new_wave_dialog import newWaveDialog
 from dialogs.arith_ops_dialog import showArithOpsDialog
 from dialogs.quantization_dialog import openQuantizaDialog
+from dialogs.freq_domain_dialog import openFreqDomainDialog
 
 window = tk.Tk() 
 window.title('DSP')
@@ -24,6 +25,9 @@ def arithmetic():
 def quantize():
     openQuantizaDialog(window)
 
+def freqDom():
+    openFreqDomainDialog(window)
+
 tk.Label(window, text="").pack()
 
 openFileBtn = tk.Button(window, pady=4, text='Open File', width=25, command=showWave) 
@@ -37,5 +41,8 @@ arithBtn.pack()
 
 quantizeBtn = tk.Button(window, pady=4, text='Quantize Signal', width=25, command=quantize) 
 quantizeBtn.pack()
+
+freqDomainBtn = tk.Button(window, pady=4, text='Frequency Domain', width=25, command=freqDom) 
+freqDomainBtn.pack()
 
 window.mainloop() 
