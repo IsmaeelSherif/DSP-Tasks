@@ -83,4 +83,12 @@ def draw_wave(wave):
   plt.ylabel('Amplitude')
   plt.show()
   
-  
+def draw_discrete(x, amplitudes , x_name , y_name):
+    if (len(amplitudes) == 0):
+      return
+    plt.subplot(2, 1, 1)
+    plt.stem(x, amplitudes, linefmt='b--', markerfmt='bo', basefmt='k-')
+    plt.title('Discrete Wave')
+    plt.xlabel(x_name)
+    plt.ylabel(y_name)
+    plt.show()

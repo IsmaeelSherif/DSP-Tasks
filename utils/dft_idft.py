@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from wave_drawer import draw_generalized
+from wave_drawer import draw_generalized , draw_discrete
 
 def export_to_text(array1, array2, file_path):
     if len(array1) == len(array2):
@@ -43,10 +43,10 @@ def applyDFT(magnitudes , sampling_freq):
         phases[i] = math.atan2(imagine, real)
 
     # to draw
-    #fundemental_freq = (2 * math.pi) / (N * (1 / sampling_freq))
-    #frequncies = np.arange(start=fundemental_freq, stop=N * fundemental_freq, step=fundemental_freq)
-    #draw_generalized(frequncies, amplitudes, "frequncy", "amplitude")
-    #draw_generalized(frequncies, phases, "frequncy", "phase")
+    fundemental_freq = (2 * math.pi) / (N * (1 / sampling_freq))
+    frequncies = np.arange(start=fundemental_freq, stop=N * fundemental_freq, step=fundemental_freq)
+    draw_discrete(frequncies, amplitudes, "frequncy", "amplitude")
+    draw_discrete(frequncies, phases, "frequncy", "phase")
     return amplitudes, phases
 
 def applyIDFT(magnitudes,phase):
