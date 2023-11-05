@@ -3,7 +3,12 @@ from utils.signal_reader import readInputFromFile
 from utils.signal_exporter import exportSignalToFile
 from utils.dft_idft import applyDFT, applyIDFT
 from testwave.Task4.signalcompare import SignalComapreAmplitude, SignalComaprePhaseShift
+from testwave.comparesignals import compareSignalToFile
 from dialogs.edit_signal import openEditDialog
+from utils.wave_drawer import draw_discrete
+from models.signal import Signal, FDSignal
+import numpy as np
+import math
 
 def openFreqDomainDialog(root):
 
@@ -16,38 +21,81 @@ def openFreqDomainDialog(root):
         if(inputSignal):
             label.config(text=inputSignal.fileName)
 
-    def calculateResult():
-        samplingFreq = 0
-        try:
-            samplingFreq = float(factor_textbox.get())
-        except:
-            print('Put a correct sampling frequency')
-            return
-
 
     def export():
-        exportSignalToFile('testwave/Task4/exported.txt')
+        filePath = 'testwave/Task4/exported.txt'
+        if(inputSignal):
+            exportSignalToFile(inputSignal, filePath)
+
+
+    def drawCurrentSignal():
+        if inputSignal:
+            if isinstance(inputSignal, Signal):
+                draw_discrete(inputSignal.x, inputSignal.magnitudes , "samples (n)" , "amplitude")
+            else:
+                samplingFreq = 0
+                try:
+                    samplingFreq = float(factor_textbox.get())
+                except:
+                    print('Put a correct sampling frequency')
+                    return
+                draw_DFT(inputSignal.amplitudes, inputSignal.phaseShifts, samplingFreq)
+
+
+    def draw_DFT(amplitudes, phases, samplingFreq):
+        N = len(amplitudes)
+        fundemental_freq = (2 * math.pi) / (N * (1 / samplingFreq))
+        frequncies = np.arange(start = fundemental_freq , stop = (N+1) * fundemental_freq, step = fundemental_freq)
+        for i in range(len(frequncies)):
+            frequncies[i] = round(frequncies[i],3)
+            
+        phases_degree = []
+        for item in phases :
+            value = item * (180 / math.pi)
+            phases_degree.append(value)
+        draw_discrete(frequncies, amplitudes, "frequncy", "amplitude")
+        draw_discrete(frequncies, phases_degree, "frequncy", "phase (degree)")
 
     def edit():
-        if(inputSignal):
-            amplitudes, phases = applyDFT(inputSignal.magnitudes , )
-            new_amps, new_phases = openEditDialog(dialog, amplitudes, phases)
-            print('newAmps', new_amps)
-            print('newPhases', new_phases)
+        if(inputSignal and isinstance(inputSignal, FDSignal)):
+            new_amps, new_phases = openEditDialog(dialog, inputSignal.amplitudes, inputSignal.phaseShifts)
+            inputSignal.amplitudes = new_amps
+            inputSignal.phaseShifts = new_phases
             
 
     def testDFT():
-        if(inputSignal):
-            amplitudes, phases = applyDFT(inputSignal.magnitudes ,int(factor_textbox.get()) )
+        nonlocal inputSignal
+        if(inputSignal and isinstance(inputSignal, Signal)):
+
+            samplingFreq = 0
+            try:
+                samplingFreq = float(factor_textbox.get())
+            except:
+                print('Put a correct sampling frequency')
+                return
+        
+            amplitudes, phases = applyDFT(inputSignal.magnitudes)
+            inputSignal = FDSignal(amplitudes, phases, 'custom FD Signal')
+
             actualOutputSignal = readInputFromFile('testwave/Task4')
-            print('SignalComapreAmplitude', SignalComapreAmplitude(actualOutputSignal.amplitudes, amplitudes))
-            print('SignalComaprePhaseShift', SignalComaprePhaseShift(actualOutputSignal.phaseShifts, phases))
+            if actualOutputSignal:
+                print('SignalComapreAmplitude', SignalComapreAmplitude(actualOutputSignal.amplitudes, amplitudes))
+                print('SignalComaprePhaseShift', SignalComaprePhaseShift(actualOutputSignal.phaseShifts, phases))
+            draw_DFT(amplitudes, phases, samplingFreq)
+            label1.config(text=inputSignal.fileName)
+
+
+    
 
     def testIDFT():
-        if(inputSignal):
+        nonlocal inputSignal
+        if(inputSignal and isinstance(inputSignal, FDSignal)):
             magnitudes = applyIDFT(inputSignal.amplitudes, inputSignal.phaseShifts)
-            # print('SignalComapreAmplitude', SignalComapreAmplitude(actualOutputSignal.amplitudes, amplitudes))
-            # print('SignalComaprePhaseShift', SignalComaprePhaseShift(actualOutputSignal.phaseShifts, phases))
+            x = range(len(magnitudes))
+            inputSignal = Signal(x, magnitudes, 'custom TD Signal')
+            label1.config(text=inputSignal.fileName)
+            compareSignalToFile(magnitudes)
+            draw_discrete(x, magnitudes , "samples (n)" , "amplitude")
             
 
     dialog = tk.Toplevel(root)
@@ -84,6 +132,9 @@ def openFreqDomainDialog(root):
 
     editBtn = tk.Button(dialog, text="edit signal", command=edit)
     editBtn.pack(pady=5)
+
+    showBtn = tk.Button(dialog, text="show signal", command=drawCurrentSignal)
+    showBtn.pack(pady=5)
 
     exportBtn = tk.Button(dialog, text="export signal", command=export)
     exportBtn.pack(pady=5)
