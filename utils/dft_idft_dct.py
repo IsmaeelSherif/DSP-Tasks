@@ -74,5 +74,7 @@ def remove_DC(magnitudes):
     for item in magnitudes:
         result = item - mean
         result = round(result, 3)
+        print(result)
         new_mag.append(result)
+
     return new_mag

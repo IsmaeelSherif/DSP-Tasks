@@ -1,7 +1,7 @@
 import tkinter as tk
 from utils.signal_reader import readInputFromFile
 from utils.signal_exporter import exportSignalToFile
-from utils.dft_idft_dct import applyDFT, applyIDFT, applyDCT
+from utils.dft_idft_dct import applyDFT, applyIDFT, applyDCT , remove_DC
 from testwave.Task4.signalcompare import SignalComapreAmplitude, SignalComaprePhaseShift
 from testwave.comparesignals import compareSignalToFile
 from dialogs.edit_signal import openEditDialog
@@ -115,7 +115,12 @@ def openFreqDomainDialog(root):
             label1.config(text=inputSignal.fileName)
             compareSignalToFile(magnitudes)
             draw_discrete(x, magnitudes , "samples (n)" , "DCT")
-            
+
+    def remove_DC_component():
+        nonlocal inputSignal
+        if inputSignal and isinstance(inputSignal, Signal):
+            inputSignal.magnitudes = remove_DC(inputSignal.magnitudes)
+            draw_discrete(inputSignal.x, inputSignal.magnitudes, "samples (n)", "amplitude")
 
     dialog = tk.Toplevel(root)
     dialog.grab_set()
@@ -131,8 +136,6 @@ def openFreqDomainDialog(root):
     button1.grid(row=0, column=0, pady=5, padx=5)
     label1 = tk.Label(button_frame, text="")
     label1.grid(row=0, column=1)
-
-
 
     factor_label = tk.Label(dialog, text="Sampling Frequency")
     factor_label.pack()
@@ -154,6 +157,16 @@ def openFreqDomainDialog(root):
 
     editBtn = tk.Button(dialog, text="edit signal", command=edit)
     editBtn.pack(pady=5)
+
+#DC button
+    button_frame3 = tk.Frame(dialog, padx=10, pady=10)  # Added frame for the new button
+    button_frame3.pack()
+
+    # Added button to remove DC component
+    remove_DC_btn = tk.Button(button_frame3, text="Remove DC Component", command=remove_DC_component)
+    remove_DC_btn.grid(row=0, column=0, pady=5, padx=5)
+
+
 
     showBtn = tk.Button(dialog, text="show signal", command=drawCurrentSignal)
     showBtn.pack(pady=5)
