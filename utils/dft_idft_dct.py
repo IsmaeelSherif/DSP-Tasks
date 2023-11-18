@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 
 
 def applyDFT(magnitudes):
@@ -66,4 +67,12 @@ def applyDCT(magnitudes):
         
     return coeffs
 
-
+def remove_DC(magnitudes):
+    N = len(magnitudes)
+    mean = np.array(magnitudes).mean()
+    new_mag = []
+    for item in magnitudes:
+        result = item - mean
+        result = round(result, 3)
+        new_mag.append(result)
+    return new_mag
