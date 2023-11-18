@@ -1,7 +1,7 @@
 import tkinter as tk
 from utils.signal_reader import readInputFromFile
 from utils.signal_exporter import exportSignalToFile
-from utils.dft_idft import applyDFT, applyIDFT
+from utils.dft_idft_dct import applyDFT, applyIDFT, applyDCT
 from testwave.Task4.signalcompare import SignalComapreAmplitude, SignalComaprePhaseShift
 from testwave.comparesignals import compareSignalToFile
 from dialogs.edit_signal import openEditDialog
@@ -17,14 +17,23 @@ def openFreqDomainDialog(root):
 
     def change_label_text(label):
         nonlocal inputSignal
-        inputSignal = readInputFromFile('testwave/Task4')
+        inputSignal = readInputFromFile('testwave/Task5')
         if(inputSignal):
             label.config(text=inputSignal.fileName)
 
 
     def export():
-        filePath = 'testwave/Task4/exported.txt'
+        filePath = 'testwave/Task5/exported.txt'
         if(inputSignal):
+            if(isinstance(inputSignal, Signal)):
+                maxLength = len(inputSignal.magnitudes)
+                try:
+                    maxLength = int(export_textbox.get())
+                except:
+                    pass
+                inputSignal.x = range(maxLength)
+                inputSignal.magnitudes = inputSignal.magnitudes[0 : maxLength]
+
             exportSignalToFile(inputSignal, filePath)
 
 
@@ -96,6 +105,16 @@ def openFreqDomainDialog(root):
             label1.config(text=inputSignal.fileName)
             compareSignalToFile(magnitudes)
             draw_discrete(x, magnitudes , "samples (n)" , "amplitude")
+
+    def testDCT():
+        nonlocal inputSignal
+        if(inputSignal and isinstance(inputSignal, Signal)):
+            magnitudes = applyDCT(inputSignal.magnitudes)
+            x = range(len(magnitudes))
+            inputSignal = Signal(x, magnitudes, 'custom DCT Signal')
+            label1.config(text=inputSignal.fileName)
+            compareSignalToFile(magnitudes)
+            draw_discrete(x, magnitudes , "samples (n)" , "DCT")
             
 
     dialog = tk.Toplevel(root)
@@ -124,11 +143,14 @@ def openFreqDomainDialog(root):
     button_frame2 = tk.Frame(dialog, padx=10, pady=10)
     button_frame2.pack()
 
-    show_button = tk.Button(button_frame2, text="test IDFT", command=testIDFT)
-    show_button.grid(row=0, column=0, padx=5)
+    idft_btn = tk.Button(button_frame2, text="test IDFT", command=testIDFT)
+    idft_btn.grid(row=0, column=0, padx=5)
 
-    compare_button = tk.Button(button_frame2, text="test DFT", command=testDFT)
-    compare_button.grid(row=0, column=1, padx=5)
+    dft_btn = tk.Button(button_frame2, text="test DFT", command=testDFT)
+    dft_btn.grid(row=0, column=1, padx=5)
+
+    dct_btn = tk.Button(button_frame2, text="test DCT", command=testDCT)
+    dct_btn.grid(row=0, column=2, padx=5)
 
     editBtn = tk.Button(dialog, text="edit signal", command=edit)
     editBtn.pack(pady=5)
@@ -136,7 +158,11 @@ def openFreqDomainDialog(root):
     showBtn = tk.Button(dialog, text="show signal", command=drawCurrentSignal)
     showBtn.pack(pady=5)
 
-    exportBtn = tk.Button(dialog, text="export signal", command=export)
-    exportBtn.pack(pady=5)
+    export_frame = tk.Frame(dialog)  # Create a frame for exportBtn and textbox
+    export_frame.pack()
 
-    dialog.wait_window()
+    exportBtn = tk.Button(export_frame, text="export signal", command=export)
+    exportBtn.pack(side=tk.LEFT, padx=5)
+
+    export_textbox = tk.Entry(export_frame)
+    export_textbox.pack(side=tk.LEFT, padx=5)

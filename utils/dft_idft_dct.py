@@ -1,6 +1,4 @@
 import math
-import numpy as np
-from utils.wave_drawer import draw_generalized , draw_discrete
 
 
 
@@ -53,5 +51,19 @@ def applyIDFT(amplitudes, phases):
         magnitudes.append(magnitude)
         
     return magnitudes
+
+def applyDCT(magnitudes):
+    N = len(magnitudes)
+    coeffs = [0] * N
+
+    for k in range(N):
+
+        for n in range(N):
+            theta = math.pi/(4*N)  * (2*n - 1) * (2*k - 1)
+            coeffs[k] += magnitudes[n] * math.cos(theta)
+
+        coeffs[k] = coeffs[k] * math.sqrt(2 / N)
+        
+    return coeffs
 
 
