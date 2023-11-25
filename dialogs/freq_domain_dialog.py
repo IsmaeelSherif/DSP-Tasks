@@ -120,6 +120,7 @@ def openFreqDomainDialog(root):
         nonlocal inputSignal
         if inputSignal and isinstance(inputSignal, Signal):
             inputSignal.magnitudes = remove_DC(inputSignal.magnitudes)
+            compareSignalToFile(inputSignal.magnitudes)
             draw_discrete(inputSignal.x, inputSignal.magnitudes, "samples (n)", "amplitude")
 
     dialog = tk.Toplevel(root)
