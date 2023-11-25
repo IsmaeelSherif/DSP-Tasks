@@ -34,13 +34,20 @@ def openTimeDomainDialog(root):
         nonlocal inputSignal
         if inputSignal:
             if isinstance(inputSignal, Signal):
-                pass
+                window = getWindowSize()
+                smoothed = ops.smooth(inputSignal.magnitudes,window)
+                print(smoothed)
+                x = np.arange(start= 0 , stop = len(smoothed) , step = 1)
+                draw_discrete(x , smoothed , "sample","amplitude")
 
     def removeDC():
         nonlocal inputSignal
         if inputSignal:
             if isinstance(inputSignal, Signal):
-                pass
+                result = ops.remove_dc_freq(inputSignal.magnitudes)
+                print(result)
+                x = np.arange(start=0, stop=len(result), step=1)
+                draw_discrete(x, result, "sample", "amplitude")
 
 
     def sharpen():
