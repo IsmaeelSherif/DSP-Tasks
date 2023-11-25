@@ -6,6 +6,7 @@ from dialogs.new_wave_dialog import newWaveDialog
 from dialogs.arith_ops_dialog import showArithOpsDialog
 from dialogs.quantization_dialog import openQuantizaDialog
 from dialogs.freq_domain_dialog import openFreqDomainDialog
+from dialogs.time_domain_dialog import openTimeDomainDialog
 
 window = tk.Tk() 
 window.title('DSP')
@@ -28,6 +29,9 @@ def quantize():
 def freqDom():
     openFreqDomainDialog(window)
 
+def timeDom():
+    openTimeDomainDialog(window)
+
 tk.Label(window, text="").pack()
 
 openFileBtn = tk.Button(window, pady=4, text='Open File', width=25, command=showWave) 
@@ -44,5 +48,8 @@ quantizeBtn.pack()
 
 freqDomainBtn = tk.Button(window, pady=4, text='Frequency Domain', width=25, command=freqDom) 
 freqDomainBtn.pack()
+
+timeDomainBtn = tk.Button(window, pady=4, text='Time Domain', width=25, command=timeDom) 
+timeDomainBtn.pack()
 
 window.mainloop() 
