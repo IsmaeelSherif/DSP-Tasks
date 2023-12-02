@@ -43,7 +43,6 @@ def fold(magnitudes):
 
 #Task 6
 def remove_dc_freq(magnitudes):
-    N = len(magnitudes)
     amplitudes,phases = applyDFT(magnitudes)
     amplitudes[0] = 0
     phases[0] = 0
