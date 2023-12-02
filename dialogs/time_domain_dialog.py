@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
+from testwave.comparesignals import compareSignalToFile
 from utils.signal_reader import readInputFromFile
 import testwave.Task6.Derivative.DerivativeSignal as DerrTest
 from testwave.Task6.Shifting_Folding.Shift_Fold_Signal import Shift_Fold_Signal
@@ -46,6 +47,7 @@ def openTimeDomainDialog(root):
             if isinstance(inputSignal, Signal):
                 result = ops.remove_dc_freq(inputSignal.magnitudes)
                 print(result)
+                compareSignalToFile(result)
                 x = np.arange(start=0, stop=len(result), step=1)
                 draw_discrete(x, result, "sample", "amplitude")
 
@@ -72,7 +74,7 @@ def openTimeDomainDialog(root):
     def delay():
         nonlocal inputSignal
         if inputSignal:
-            if isinstance(inputSignal, Signal) and ('folded' in inputSignal.fileName):
+            if isinstance(inputSignal, Signal):
 
                 k = getWindowSize()
                 delayedSignal = arithOps.shiftWave(inputSignal, -k)
