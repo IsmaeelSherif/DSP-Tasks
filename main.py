@@ -8,6 +8,7 @@ from dialogs.quantization_dialog import openQuantizaDialog
 from dialogs.freq_domain_dialog import openFreqDomainDialog
 from dialogs.time_domain_dialog import openTimeDomainDialog
 from dialogs.convolution_dialog import openConvDialog
+from dialogs.correlation_dialog import openCorrelationDialog
 
 window = tk.Tk() 
 window.title('DSP')
@@ -36,6 +37,9 @@ def timeDom():
 def conv():
     openConvDialog(window)
 
+def corr():
+    openCorrelationDialog(window)
+
 tk.Label(window, text="").pack()
 
 openFileBtn = tk.Button(window, pady=4, text='Open File', width=25, command=showWave) 
@@ -58,5 +62,8 @@ timeDomainBtn.pack()
 
 convBtn = tk.Button(window, pady=4, text='Convolution', width=25, command=conv) 
 convBtn.pack()
+
+corrBtn = tk.Button(window, pady=4, text='Correlation', width=25, command=corr)
+corrBtn.pack()
 
 window.mainloop() 
