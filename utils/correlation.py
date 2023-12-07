@@ -25,7 +25,6 @@ def correlation(magnitudes_1,magnitudes_2,periodic):
         for i in range(N):
             result = 0
             normalization_factor =round( np.sqrt(sum(x*x for x in magnitudes_1)*sum(x*x for x in magnitudes_2))/N,2)
-            print(normalization_factor)
             for j in range(N):
                 result += magnitudes_1[j]*signal_2[j]
             result /= N
