@@ -10,7 +10,7 @@ from dialogs.time_domain_dialog import openTimeDomainDialog
 from dialogs.convolution_dialog import openConvDialog
 from dialogs.correlation_dialog import openCorrelationDialog
 from dialogs.fast_convolution_dialog import openFastConvDialog
-
+from dialogs.fast_correlation_dialog import openFastCorrelationDialog
 window = tk.Tk() 
 window.title('DSP')
 window.geometry("960x540")
@@ -44,6 +44,9 @@ def corr():
 def fastConv():
     openFastConvDialog(window)
 
+def fastCorr():
+    openFastCorrelationDialog(window)
+
 tk.Label(window, text="").pack()
 
 openFileBtn = tk.Button(window, pady=4, text='Open File', width=25, command=showWave) 
@@ -72,5 +75,8 @@ corrBtn.pack()
 
 fastConvBtn = tk.Button(window, pady=4, text='Fast Convolution', width=25, command=fastConv) 
 fastConvBtn.pack()
+
+fastCorrelationBtn = tk.Button(window, pady=4, text='Fast Correlation', width=25, command=fastCorr)  # Add this line
+fastCorrelationBtn.pack()
 
 window.mainloop() 
